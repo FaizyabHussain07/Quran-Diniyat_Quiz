@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Page</title>
+    <style>
+        /* Base styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #4c741d;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .form-all {
+            max-width: 752px;
+            margin: 0 auto;
+            background-color: #f4ffe0;
+            padding: 20px;
+            border-radius: 8px;
+            color: #46552a;
+        }
+
+        
+/* Responsive styles */
+@media (max-width: 768px) {
+    .form-textbox, .form-dropdown {
+        width: 100%; /* Full width on mobile */
+    }
+
+    .form-line-group {
+        flex-direction: column; /* Stack inputs vertically */
+    }
+
+    .form-line {
+        width: 100%; /* Full width for each line */
+    }
+   
+    .form-pagebreak {
+        flex-direction: column; /* Stack buttons vertically */
+    }
+
+    .form-pagebreak button {
+        width: 100%; /* Full width for buttons */
+        margin-bottom: 10px; /* Space between buttons */
+    }
+
+    #timer {
+        font-size: 20px; /* Adjust timer font size */
+    }
+}
+
+/* Additional styles for smaller screens */
+@media (max-width: 480px) {
+    .form-header-group h1 {
+        font-size: 24px; /* Smaller header font size */
+    }
+
+    .form-header-group div {
+        font-size: 16px; /* Smaller subheader font size */
+    }
+
+
+    .success-icon {
+        width: 80px; /* Smaller success icon */
+        height: 80px;
+    }
+
+    .success-icon svg {
+        width: 40px; /* Smaller SVG icon */
+        height: 40px;
+    }
+
+    .message {
+        font-size: 16px; /* Smaller message font size */
+    }
+}
+
+        /* Header styles */
+        .form-header-group {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-logo img {
+            max-width: 128px;
+            height: 128px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4c741d;
+        }
+
+        /* Form section styles */
+        .form-section {
+            display: none;
+            margin: 20px 0;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-line-group{
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+        }
+
+        /* Input styles */
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .form-required {
+            color: red;
+            margin-left: 5px;
+        }
+
+        .form-input-wide {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-textbox{
+          width: 20%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-dropdown {
+            width: 30%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-multiple-column {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .form-radio-item {
+            margin: 8px 0;
+        }
+
+        /* Button styles */
+        .form-pagebreak {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .form-pagebreak button,
+        .form-submit-button {
+            background-color: #4c741d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-pagebreak button:hover,
+        .form-submit-button:hover {
+            background-color: #3a5816;
+        }
+
+        /* Timer styles */
+        #timer  {
+            position: sticky;
+            top: 20px;
+            z-index: 1000;
+            text-align: center;
+            font-size: 24px;
+            margin: 20px auto;
+            justify-content: center;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 230px;
+        }
+        #timer p{
+          position: sticky;
+            top: 20px;
+            z-index: 1000;
+            text-align: center;
+            font-size: 24px;
+            background-color: #fff;
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 4px;
+            border-bottom: black;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 190px;
+        }
+
+        /* Info text styles */
+        .info-text {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background-color: #4c741d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+        }
+
+        .success-icon svg {
+            width: 60px;
+            height: 60px;
+            fill: white;
+        }
+
+        .message {
+            color: #46552a;
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .user-info {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .view-results-btn {
+            background-color: #4c741d;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .view-results-btn:hover {
+            background-color: #3a5816;
+        }
+
+        #resultSection {
+            display: none;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .result-item {
+            background-color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #4c741d;
+        }
+
+        .correct {
+            border-left-color: #28a745;
+        }
+
+        .incorrect {
+            border-left-color: #dc3545;
+        }
+
+        .score-summary {
+            font-size: 24px;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+        }
+
+        .restart-btn {
+            background-color: #4c741d;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+            display: block;
+            width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .restart-btn:hover {
+            background-color: #3a5816;
+        }
+
+        .thank-you-content {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #resultSection {
+            display: none;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .view-results-btn {
+            background-color: #4c741d;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .form-line-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-line {
+            flex: 1;
+        }
+
+        .form-input-wide {
+            display: flex;
+            gap: 10px;
+        }
+        .form-textbox {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-dropdown {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+
+        .full-width {
+            width: 100%;
+        }
+
+        .phone-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .country-code {
+            width: 56px;
+        }
+    </style>
+</head>
+<body>
+    <form id="quizForm" onsubmit="return submitQuiz(event)">
+        <div class="form-all">
+            <!-- Registration Section -->
+            <div class="form-section active" id="section1">
+                <div class="form-header-group">
+                    <div class="header-logo">
+                        <img src="quran logo.PNG" alt="Welcome to Quiz">
+                        <p>Faizyab Hussain</p>
+                    </div>
+                    <div class="header-text">
+                        <h1>Welcome to Quiz</h1>
+                        <div>Diniyat & Quran</div>
+                    </div>
+                </div>
+
+                <!-- First Row: Name and DOB -->
+                <div class="form-line-group">
+                    <div class="form-line">
+                        <label class="form-label">
+                            Name<span class="form-required">*</span>
+                        </label>
+                        <div class="form-input-wide">
+                            <input type="text" class="form-textbox" name="firstName" placeholder="First Name" required>
+                            <input type="text" class="form-textbox" name="lastName" placeholder="Last Name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-line">
+                        <label class="form-label">
+                            Date of Birth<span class="form-required">*</span>
+                        </label>
+                        <div class="form-input-wide">
+                            <input type="date" class="form-textbox" name="dob" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Row: Email and Phone -->
+                <div class="form-line-group">
+                    <div class="form-line">
+                        <label class="form-label">
+                            Email<span class="form-required">*</span>
+                        </label>
+                        <div class="form-input-wide">
+                            <input type="email" class="form-textbox" name="email" placeholder="example@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-line">
+                        <label class="form-label">
+                            Phone Number<span class="form-required">*</span>
+                        </label>
+                        <div class="form-input-wide phone-input">
+                           
+                            <input type="tel" class="form-textbox" name="phone" placeholder="Phone Number" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Street Address Row -->
+                <div class="form-line">
+                    <label class="form-label">
+                        Street Address<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <input type="text" class="form-textbox full-width" name="street" placeholder="Street Address" required>
+                    </div>
+                </div>
+
+                <!-- City and State Row -->
+                <div class="form-line-group">
+                    <div class="form-line">
+                        <label class="form-label">
+                            City<span class="form-required">*</span>
+                        </label>
+                        <div class="form-input-wide">
+                            <input type="text" class="form-textbox" name="city" placeholder="City" required>
+                        </div>
+                    </div>
+
+                    <div class="form-line">
+                        <label class="form-label">
+                            State/Province<span class="form-required">*</span>
+                        </label>
+                        <div class="form-input-wide">
+                            <input type="text" class="form-textbox" name="state" placeholder="State/Province" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Country Row -->
+                <div class="form-line">
+                    <label class="form-label">
+                        Country<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <select class="form-dropdown full-width" name="country" required>
+                            <option value="">Select Country</option>
+                            <option value="AF">Afghanistan</option>
+                            <option value="BH">Bahrain</option>
+                            <option value="BD">Bangladesh</option>
+                            <option value="BT">Bhutan</option>
+                            <option value="CN">China</option>
+                            <option value="CY">Cyprus</option>
+                            <option value="AE">Dubai</option>
+                            <option value="EG">Egypt</option>
+                            <option value="IN">India</option>
+                            <option value="ID">Indonesia</option>
+                            <option value="IR">Iran</option>
+                            <option value="IQ">Iraq</option>
+                            <option value="IL">Israel</option>
+                            <option value="JP">Japan</option>
+                            <option value="JO">Jordan</option>
+                            <option value="KZ">Kazakhstan</option>
+                            <option value="KR">Korea, South</option>
+                            <option value="KW">Kuwait</option>
+                            <option value="KG">Kyrgyzstan</option>
+                            <option value="LA">Laos</option>
+                            <option value="LB">Lebanon</option>
+                            <option value="MY">Malaysia</option>
+                            <option value="MV">Maldives</option>
+                            <option value="MN">Mongolia</option>
+                            <option value="MM">Myanmar</option>
+                            <option value="NP">Nepal</option>
+                            <option value="OM">Oman</option>
+                            <option value="PK">Pakistan</option>
+                            <option value="PS">Palestine</option>
+                            <option value="PH">Philippines</option>
+                            <option value="QA">Qatar</option>
+                            <option value="SA">Saudi Arabia</option>
+                            <option value="SG">Singapore</option>
+                            <option value="LK">Sri Lanka</option>
+                            <option value="SY">Syria</option>
+                            <option value="TW">Taiwan</option>
+                            <option value="TJ">Tajikistan</option>
+                            <option value="TH">Thailand</option>
+                            <option value="TR">Turkey</option>
+                            <option value="TM">Turkmenistan</option>
+                            <option value="AE">UAE</option>
+                            <option value="UZ">Uzbekistan</option>
+                            <option value="VN">Vietnam</option>
+                            <option value="YE">Yemen</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-pagebreak">
+                    <div></div>
+                    <button type="button" onclick="nextSection()">Start Quiz</button>
+                </div>
+            </div>
+
+            <!-- Quiz Section -->
+            <div class="form-section" id="section2">
+                <div class="form-header-group">
+                    <h2>START YOUR ONLINE QUIZ</h2>
+                    <div>Total number of questions: 30</div>
+                </div>
+
+                <div id="timer">
+                    <p>Time Remaining:</p>
+                    <span>30:00</span>
+                </div>
+
+                <div class="info-text">
+                    You have 30 minutes to take the quiz. Once the time finishes, your answers will be submitted automatically.
+                </div>
+
+                <!-- Questions 1-10 -->
+                <div class="form-line">
+                    <label class="form-label">
+                        1. Usool-e-Deen kitne hain?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q1" value="a" required> a) 3
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q1" value="b" required> b) 4
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q1" value="c" required> c) 5
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q1" value="d" required> d) 6
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        2. Tauheed ka matlab kya hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q2" value="a" required> a) Allah ki wahdaniyat
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q2" value="b" required> b) Rasool ka maqam
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q2" value="c" required> c) Imam ka maqam
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q2" value="d" required> d) Namaz ka tareeqa
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        3. Nabuwat ka kya matlab hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q3" value="a" required> a) Farishton ka maqam
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q3" value="b" required> b) Allah ke paighambar bhejna
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q3" value="c" required> c) Imam ka rutba
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q3" value="d" required> d) Wahi ka kaam
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        4. Qiyamat ka kya matlab hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q4" value="a" required> a) Aakhri din ka ana
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q4" value="b" required> b) Namaz ka waqt
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q4" value="c" required> c) Roza ka waqt
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q4" value="d" required> d) Azan ka waqt
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        5. Furoo-e-Deen ka pehla rukn kya hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q5" value="a" required> a) Namaz
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q5" value="b" required> b) Roza
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q5" value="c" required> c) Hajj
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q5" value="d" required> d) Khums
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        6. Roza kitne mahine rakha jata hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q6" value="a" required> a) Safar
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q6" value="b" required> b) Ramzan
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q6" value="c" required> c) Rajab
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q6" value="d" required> d) Muharram
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        7. Hajj karne ka waqt kaunsa hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q7" value="a" required> a) Zil-Hajj
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q7" value="b" required> b) Muharram
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q7" value="c" required> c) Rabi-ul-Awwal
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q7" value="d" required> d) Rajab
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        8. Amr bil Maroof ka kya matlab hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q8" value="a" required> a) Burai ka hukm dena
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q8" value="b" required> b) Bhali ka hukm dena
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q8" value="c" required> c) Namaz ka waqt batana
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q8" value="d" required> d) Imam ka zikr
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        9. Nahi anil Munkar ka matlab kya hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q9" value="a" required> a) Achai ka kaam
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q9" value="b" required> b) Burai se roknay ka hukm
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q9" value="c" required> c) Dua parhna
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q9" value="d" required> d) Quran ka tilawat
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        10. Jihad ka asal matlab kya hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q10" value="a" required> a) Sirf jang karna
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q10" value="b" required> b) Allah ki rah mein koshish karna
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q10" value="c" required> c) Farishton ka kaam
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q10" value="d" required> d) Zakat dena
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        11. Pehle(1st) Imam kaun hain?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q11" value="a" required> a) Imam Ali (A.S.)
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q11" value="b" required> b) Imam Hasan (A.S.)
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q11" value="c" required> c) Imam Hussain (A.S.)
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q11" value="d" required> d) Imam Mehdi (A.S.)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        12. Chauthai(4th) Imam kaun hain?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q12" value="a" required> a) Imam Zain ul Abideen (A.S.)
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q12" value="b" required> b) Imam Hasan (A.S.)
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q12" value="c" required> c) Imam Jafar Sadiq (A.S.)
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q12" value="d" required> d) Imam Ali (A.S.)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        13. Teesre(3rd) Imam ka naam batayein?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q13" value="a" required> a) Imam Mehdi (A.S.)
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q13" value="b" required> b) Imam Musa Kazim (A.S.)
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q13" value="c" required> c) Imam Hussain (A.S.)
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q13" value="d" required> d) Imam Hasan Askari (A.S.)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        14. Aakhri(last) Imam kaun hain?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q14" value="a" required> a) Imam Hasan (A.S.)
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q14" value="b" required> b) Imam Hussain (A.S.)
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q14" value="c" required> c) Imam Musa Kazim (A.S.)
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q14" value="d" required> d) Imam Mehdi (A.S.)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        15. Wudu karte waqt sab se pehle kya dhoya jata hai? (Wajib)<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q15" value="a" required> a) Chehra
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q15" value="b" required> b) Haath
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q15" value="c" required> c) Paon
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q15" value="d" required> d) Sarr
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        16. Wudu ki duraan kaun si surah parhte hain?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q16" value="a" required> a)  Surah Al-Qadr
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q16" value="b" required> b) Surah Al-Ikhlas
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q16" value="c" required> c) Surah Al-Fatiha
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q16" value="d" required> d) Surah Al-Baqarah
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        17. Fajr ki namaz mein kitni rakaat hoti hain?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q17" value="a" required> a) 3
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q17" value="b" required> b) 4
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q17" value="c" required> c) 2
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q17" value="d" required> d) 6
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        18. Namaz mein kaun si surah har rakat mein parhna zaroori hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q18" value="a" required> a) Surah Fatiha
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q18" value="b" required> b) Surah Yaseen
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q18" value="c" required> c) Surah Rehman
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q18" value="d" required> d) Surah Baqarah
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        19. Azan aur Aqamat ka farq kya hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q19" value="a" required> a) Aqamat mein do dafa Takbeer hoti hai
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q19" value="b" required> b) Aqamat mein "Qad Qamatis Salah" kaha jata hai
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q19" value="c" required> c) Azan sirf jummah ke din hoti hai
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q19" value="d" required> d) Aqamat sirf Fajr ke waqt hoti hai
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        20. Azan mein kitni martaba Allahu Akbar kaha jata hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q20" value="a" required> a) 2
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q20" value="b" required> b) 4
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q20" value="c" required> c) 6
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q20" value="d" required> d) 8
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        21. Pehla Islami mahina kaunsa hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q21" value="a" required> a) Muharram
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q21" value="b" required> b) Safar
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q21" value="c" required> c) Rajab
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q21" value="d" required> d) Ramzan
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        22. Ramzan ka sab se bara amal kya hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q22" value="a" required> a) Hajj
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q22" value="b" required> b) Zakat
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q22" value="c" required> c) Roza
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q22" value="d" required> d) Khums
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        23. Quran kis mahine mein nazil hua?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q23" value="a" required> a) Rajab
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q23" value="b" required> b) Ramzan
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q23" value="c" required> c) Muharram
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q23" value="d" required> d) Rabi-ul-Awwal
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        24. Maut ka farishta kaun hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q24" value="a" required> a) Jibrael
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q24" value="b" required> b) Mikael
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q24" value="c" required> c) Izraeel
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q24" value="d" required> d) Israfeel
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        25. Wahi ka farishta kaun hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q25" value="a" required> a) Jibrael
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q25" value="b" required> b) Izraeel
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q25" value="c" required> c) Israfeel
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q25" value="d" required> d) Mikael
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        26. Ayat-ul-Kursi Quran ke kis surah mein hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q26" value="a" required> a) Surah Yaseen
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q26" value="b" required> b) Surah Al-Baqarah
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q26" value="c" required> c) Surah Ikhlas
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q26" value="d" required> d) Surah Falaq
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        27. Quran ka sab se bara surah kaunsa hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q27" value="a" required> a) Surah Al-Baqarah
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q27" value="b" required> b) Surah Yaseen
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q27" value="c" required> c) Surah Rehman
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q27" value="d" required> d) Surah Ikhlas
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        28. Quran ka sab se chhota surah kaunsa hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q28" value="a" required> a) Surah Kausar
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q28" value="b" required> b) Surah Nas
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q28" value="c" required> c) Surah Asr
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q28" value="d" required> d) Surah Ikhlas
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        29. Dua Imam-e-Zamana (A.S.) ka aakhri jumla kya hai?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q29" value="a" required> a) Al-Ajal, Al-Ajal, Ya Maula
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q29" value="b" required> b) SubhanAllah
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q29" value="c" required> c) Ya Allah Madad
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q29" value="d" required> d) Astaghfirullah
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <label class="form-label">
+                        30. Namaz ki akhir mein kya parhte hain?<span class="form-required">*</span>
+                    </label>
+                    <div class="form-input-wide">
+                        <div class="form-multiple-column">
+                            <div class="form-radio-item">
+                                <input type="radio" name="q30" value="a" required> a) Salam
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q30" value="b" required> b) Takbee
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q30" value="c" required> c) Tashahhud
+                            </div>
+                            <div class="form-radio-item">
+                                <input type="radio" name="q30" value="d" required> d) Dua-e-Qunoot
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-pagebreak">
+                    <button type="button" onclick="prevSection()">Back</button>
+                    <button type="submit" class="form-submit-button">Submit</button>
+                </div>
+            </div>
+
+            <!-- Add this new section after your quiz section -->
+            <div class="form-section" id="section3">
+                <div class="form-header-group">
+                    <div class="thank-you-content">
+                        <div class="success-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                            </svg>
+                        </div>
+                        
+                        <h1>Thank You for Completing the Quiz!</h1>
+                        
+                        <div class="message">
+                            Your responses have been successfully recorded.
+                        </div>
+                    </div>
+
+                    <div class="user-info" id="userInfo">
+                        <!-- Will be filled by JavaScript -->
+                    </div>
+
+                    <button class="view-results-btn" onclick="toggleResults()">View Results</button>
+
+                    <div id="resultSection">
+                        <div class="score-summary" id="scoreSummary">
+                            <!-- Will be filled by JavaScript -->
+                        </div>
+                        <div id="detailedResults">
+                            <!-- Will be filled by JavaScript -->
+                        </div>
+                        <button class="restart-btn" onclick="restartQuiz()">Restart Quiz</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <script>
+      // Define correct answers globally
+const correctAnswers = {
+    q1: "c",  // 5
+    q2: "a",  // Allah ki wahdaniyat
+    q3: "b",  // Allah ke paighambar bhejna
+    q4: "a",  // Aakhri din ka ana
+    q5: "a",  // Namaz
+    q6: "b",  // Ramzan
+    q7: "a",  // Zil-Hajj
+    q8: "b",  // Bhali ka hukm dena
+    q9: "b",  // Burai se roknay ka hukm
+    q10: "b", // Allah ki rah mein koshish karna
+    q11: "a", // Imam Ali (A.S.)
+    q12: "a", // Imam Zain ul Abideen (A.S.)
+    q13: "c", // Imam Hussain (A.S.)
+    q14: "d", // Imam Mehdi (A.S.)
+    q15: "a", // Chehra
+    q16: "a", // Ash-hadu an la ilaha illallah
+    q17: "c", // 2
+    q18: "a", // Surah Fatihah
+    q19: "b", // Aqamat mein "Qad Qamatis Salah" kaha jata hai
+    q20: "c", // 6
+    q21: "a", // Muharram
+    q22: "c", // Roza
+    q23: "b", // Ramzan
+    q24: "c", // Izraeel
+    q25: "a", // Jibrael
+    q26: "b", // Surah Al-Baqarah
+    q27: "a", // Surah Al-Baqarah
+    q28: "a", // Surah Kausar
+    q29: "a", // Al-Ajal, Al-Ajal, Ya Maula
+    q30: "a"  // Salam
+};
+
+// Quiz functionality
+function nextSection() {
+    const requiredFields = [
+        'firstName', 'lastName', 'dob', 'email', 'phone',
+        'street', 'city', 'state', 'country'
+    ];
+
+    for (let fieldName of requiredFields) {
+        const field = document.querySelector(`[name="${fieldName}"]`);
+        if (!field.value.trim()) {
+            alert(`Please fill in the ${fieldName.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
+            field.focus();
+            return;
+        }
+    }
+
+    const email = document.querySelector('[name="email"]');
+    if (!/^\S+@\S+\.\S+$/.test(email.value)) {
+        alert('Please enter a valid email address');
+        email.focus();
+        return;
+    }
+
+    const phone = document.querySelector('[name="phone"]');
+    if (!/^\d{11}$/.test(phone.value.replace(/\D/g, ''))) {
+        alert('Please enter a valid phone number');
+        phone.focus();
+        return;
+    }
+
+    document.getElementById('section1').classList.remove('active');
+    document.getElementById('section2').classList.add('active');
+    startTimer();
+}
+
+function prevSection() {
+    document.getElementById('section2').classList.remove('active');
+    document.getElementById('section1').classList.add('active');
+}
+
+let timerInterval;
+function startTimer() {
+    let timeLeft = 30 * 60; // 30 minutes in seconds
+    const timerDisplay = document.querySelector('#timer span');
+    
+    if (!timerDisplay) {
+        console.error('Timer display element not found');
+        return;
+    }
+
+    timerInterval = setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+
+        timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            document.getElementById('quizForm').submit();
+        }
+
+        timeLeft--;
+    }, 1000);
+}
+
+function calculateAndDisplayResults(userAnswers) {
+    let score = 0;
+    let resultsHTML = '';
+    
+    for (let i = 1; i <= 30; i++) {
+        const questionKey = `q${i}`;
+        const isCorrect = userAnswers[questionKey] === correctAnswers[questionKey];
+        
+        if (isCorrect) {
+            score++;
+        }
+        
+        const questionElement = document.querySelector(`[name="${questionKey}"]`).closest('.form-line').querySelector('.form-label').textContent;
+        const selectedAnswerElement = document.querySelector(`[name="${questionKey}"][value="${userAnswers[questionKey]}"]`).parentElement;
+        const selectedAnswerText = selectedAnswerElement.textContent.trim();
+        const correctAnswerElement = document.querySelector(`[name="${questionKey}"][value="${correctAnswers[questionKey]}"]`).parentElement;
+        const correctAnswerText = correctAnswerElement.textContent.trim();
+
+        resultsHTML += `
+            <div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">
+                <p><strong>${questionElement}</strong></p>
+                <p>Your Answer: ${selectedAnswerText}</p>
+                <p>Correct Answer: ${correctAnswerText}</p>
+            </div>
+        `;
+    }
+
+    document.getElementById('scoreSummary').innerHTML = `
+        <h3>Your Score: ${score}/30</h3>
+        <p>Time Taken: ${window.timeTaken}</p>
+        <p>Percentage: ${Math.round((score/30) * 100)}%</p>
+    `;
+
+    document.getElementById('detailedResults').innerHTML = resultsHTML;
+}
+
+function toggleResults() {
+    const resultSection = document.getElementById('resultSection');
+    const thankYouContent = document.querySelector('.thank-you-content');
+    const viewResultsBtn = document.querySelector('.view-results-btn');
+    const userInfo = document.getElementById('userInfo');
+
+    if (resultSection.style.display === 'block') {
+        resultSection.style.display = 'none';
+        userInfo.style.display = 'block';
+        thankYouContent.style.display = 'block';
+        viewResultsBtn.style.display = 'block';
+        viewResultsBtn.textContent = 'View Results';
+    } else {
+        resultSection.style.display = 'block';
+        userInfo.style.display = 'none';
+        thankYouContent.style.display = 'none';
+        viewResultsBtn.style.display = 'none';
+    }
+}
+
+function restartQuiz() {
+    document.getElementById('quizForm').reset();
+    document.getElementById('section2').classList.remove('active');
+    document.getElementById('section3').classList.remove('active');
+    document.getElementById('section1').classList.add('active');
+    
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+    
+    document.getElementById('resultSection').style.display = 'none';
+    document.querySelector('.thank-you-content').style.display = 'block';
+    document.querySelector('.view-results-btn').textContent = 'View Results';
+    window.scrollTo(0, 0);
+}
+
+// Export functions for use in HTML
+window.nextSection = nextSection;
+window.prevSection = prevSection;
+window.toggleResults = toggleResults;
+window.restartQuiz = restartQuiz;
+window.calculateAndDisplayResults = calculateAndDisplayResults;
+    </script>
+
+<!-- Keep all your existing HTML the same until the script tags at the bottom -->
+
+<!-- Then add the Firebase configuration -->
+<script type="module">
+    // Import Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+
+    // Your Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCqgYMlanTEwA0e3UyXKUZAFqUjZ7NMZsU",
+        authDomain: "quran-quiz-97381.firebaseapp.com",
+        databaseURL: "https://quran-quiz-97381-default-rtdb.firebaseio.com",
+        projectId: "quran-quiz-97381",
+        storageBucket: "quran-quiz-97381.firebasestorage.app",
+        messagingSenderId: "643080995165",
+        appId: "1:643080995165:web:e7825c5e7600b793c8e8b4"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Add the submit quiz function
+    window.submitQuiz = async function(event) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        try {
+            // Get form data
+            const formData = new FormData(document.getElementById('quizForm'));
+            
+            // Get timer display
+            const timerSpan = document.querySelector('#timer span');
+            const timerDisplay = timerSpan ? timerSpan.textContent : '00:00';
+            
+            // Calculate time taken
+            const [remainingMinutes, remainingSeconds] = timerDisplay.split(':').map(Number);
+            const remainingTimeInSeconds = remainingMinutes * 60 + remainingSeconds;
+            const timeTakenInSeconds = (30 * 60) - remainingTimeInSeconds;
+            const timeTaken = `${Math.floor(timeTakenInSeconds / 60)}:${(timeTakenInSeconds % 60).toString().padStart(2, '0')}`;
+            
+            // Make timeTaken globally available
+            window.timeTaken = timeTaken;
+
+            // Collect quiz answers
+            const userAnswers = {};
+            let score = 0;
+            
+            for (let i = 1; i <= 30; i++) {
+                const questionKey = `q${i}`;
+                const userAnswer = formData.get(questionKey);
+                if (!userAnswer) {
+                    alert('Please answer all questions before submitting.');
+                    return false;
+                }
+                userAnswers[questionKey] = userAnswer;
+                
+                if (userAnswer === correctAnswers[questionKey]) {
+                    score++;
+                }
+            }
+
+            // Create quiz data structure
+            const quizData = {
+                "RegistrationData": {
+                    firstName: formData.get('firstName'),
+                    lastName: formData.get('lastName'),
+                    dob: formData.get('dob'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    countryCode: formData.get('countryCode'),
+                    street: formData.get('street'),
+                    city: formData.get('city'),
+                    state: formData.get('state'),
+                    country: formData.get('country')
+                },
+                "ResultForm": {
+                    "TimeLimit": {
+                        remainingTime: timerDisplay,
+                        timeTaken: timeTaken
+                    },
+                    name: `${formData.get('firstName')} ${formData.get('lastName')}`,
+                    score: score,
+                    percentage: Math.round((score/30) * 100),
+                    timestamp: new Date().toISOString()
+                },
+                "User-quiz-ans": userAnswers,
+                "Correct-ans": correctAnswers
+            };
+
+            // Save to Firebase
+            const quizRef = ref(database, 'Quiz-Result');
+            const newQuizRef = push(quizRef);
+            await set(newQuizRef, quizData);
+            
+            console.log('Quiz result saved successfully');
+            
+            // Stop timer
+            if (window.timerInterval) {
+                clearInterval(window.timerInterval);
+            }
+            
+            // Update UI
+            document.getElementById('section2').classList.remove('active');
+            document.getElementById('section3').classList.add('active');
+
+            // Display user info
+            document.getElementById('userInfo').innerHTML = `
+                <h3>Participant Information:</h3>
+                <p><strong>Name:</strong> ${formData.get('firstName')} ${formData.get('lastName')}</p>
+                <p><strong>Email:</strong> ${formData.get('email')}</p>
+            `;
+
+            // Calculate and display results
+            calculateAndDisplayResults(userAnswers);
+
+        } catch (error) {
+            console.error('Error in submitQuiz:', error);
+            alert('There was an error submitting your quiz. Please try again.');
+        }
+
+        return false;
+    };
+</script>
+</html>
+
